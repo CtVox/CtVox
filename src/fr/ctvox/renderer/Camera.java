@@ -1,5 +1,6 @@
 package fr.ctvox.renderer;
 
+import fr.ctvox.maths.Mathf;
 import fr.ctvox.maths.Vec3;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -12,8 +13,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Camera
 {
-    Vec3        pos;
-    Vec3        rot;
+    public Vec3        pos;
+    public Vec3        rot;
 
     float       fov,
                 zNear,
@@ -21,22 +22,44 @@ public class Camera
 
     public Camera()
     {
-        this.pos = new Vec3();
-        this.rot = new Vec3();
+        this.pos = new Vec3(-10, 19, 6);
+        this.rot = new Vec3(35, 113, 0);
     }
+
+    float xDir, yDir, zDir;
+    float xa, ya, za;
+    float speed = 0.01f;
 
     public void update()
     {
         rot.x += -Mouse.getDY() / 2;
         rot.y += Mouse.getDX() / 2;
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_Z)) pos.z += -0.1f;
-        if(Keyboard.isKeyDown(Keyboard.KEY_S)) pos.z += 0.1f;
-        if(Keyboard.isKeyDown(Keyboard.KEY_Q)) pos.x += 0.1f;
-        if(Keyboard.isKeyDown(Keyboard.KEY_D)) pos.x += -0.1f;
-        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) pos.y += -0.1f;
-        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) pos.y += 0.1f;
+        if(rot.x > 90) rot.x = 90;
+        if(rot.x < -90) rot.x = -90;
 
+        if(Keyboard.isKeyDown(Keyboard.KEY_Z)) zDir = -speed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_S)) zDir = speed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_Q)) xDir = -speed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_D)) xDir = speed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) yDir = speed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) yDir = -speed;
+
+        xa += xDir * Mathf.cos(Mathf.toRadians(rot.y)) - zDir * Mathf.sin(Mathf.toRadians(rot.y));
+        za += zDir * Mathf.cos(Mathf.toRadians(rot.y)) + xDir * Mathf.sin(Mathf.toRadians(rot.y));
+        ya += yDir;
+
+        pos.x += xa;
+        pos.y += ya;
+        pos.z += za;
+
+        xa *= 0.9f;
+        ya *= 0.9f;
+        za *= 0.9f;
+
+        xDir = 0;
+        yDir = 0;
+        zDir = 0;
 
 
     }

@@ -46,7 +46,12 @@ public class Game
     public void update()
     {
         if(Mouse.isButtonDown(0)) Mouse.setGrabbed(true);
-        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) Mouse.setGrabbed(false);
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+        {
+            Mouse.setGrabbed(false);
+            System.out.println("pos : " + cam.pos.x + " | " + cam.pos.y + " | " + cam.pos.z);
+            System.out.println("rot : " + cam.rot.x + " | " + cam.rot.y + " | " + cam.rot.z);
+        }
         if(!Mouse.isGrabbed()) return;
 
         if(Display.wasResized()) glViewport(0, 0, Display.getWidth(), Display.getHeight());
